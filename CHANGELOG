@@ -1,0 +1,17 @@
+-------------------------------------------------------------------------------
+CHANGELOG
+-------------------------------------------------------------------------------
+
+Version 0.0.3 - May 13, 2010
+* Now uses libtotem 2.30 instead of 2.28. 2.28 may still be used with slight
+  modifications to the code.
+
+Version 0.0.2 - May 6, 2010
+
+* Fixed some issues with the volume slider page increment size.
+* Fixed some compatibility issues with Windows.
+
+
+Version 0.0.1 - April 22, 2010
+
+* Birth of GTK Media Box with all intended features implemented.
