@@ -21,6 +21,8 @@
 #include <string.h>
 #include <glib/gprintf.h>
 #include <gst/video/video.h>
+#include <totem-pl-parser.h>
+#include <libgnomevfs/gnome-vfs.h>
 #include "playlist.h"
 #include "player.h"
 #include "variables.h"
@@ -223,7 +225,7 @@ void save_pl_button_clicked (GtkWidget *widget, gpointer data)
 			type = TOTEM_PL_PARSER_PLS;
 
 		// Use this code for Totem Playlist Parser 2.28 and down.
-		if (totem_pl_parser_write (save_playlist, model, save_parser,
+		if (gnome_vfs_init () != TRUE || totem_pl_parser_write (save_playlist, model, save_parser,
 				       	   filename, type, NULL, NULL) != TRUE)
 			error_dialog (pl_window,
 				      "Error occurred while saving playlist.");
