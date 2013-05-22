@@ -193,7 +193,7 @@ int main (int argc, char *argv[])
 
 	pl_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title (GTK_WINDOW (pl_window), "Playlist");
-	gtk_widget_set_size_request (pl_window, 410, 200);
+	gtk_widget_set_size_request (pl_window, 394, 200);
 	gtk_window_set_resizable (GTK_WINDOW (pl_window), TRUE);
 	gtk_window_set_icon (GTK_WINDOW (pl_window), window_icon);
 	gtk_window_set_destroy_with_parent (GTK_WINDOW (pl_window), TRUE);
