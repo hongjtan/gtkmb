@@ -20,6 +20,7 @@
 
 #include <string.h>
 #include <glib/gprintf.h>
+#include <gst/video/video.h>
 #include "playlist.h"
 #include "player.h"
 #include "variables.h"
@@ -164,7 +165,7 @@ void save_pl_button_clicked (GtkWidget *widget, gpointer data)
 {
 	GtkWidget *dialog, *pl_window, *playlist;
 	GtkTreeModel *model;
-	GtkTreeIter playlist_iter;
+	//GtkTreeIter playlist_iter;
 	GtkFileFilter *format_playlist;
 
 	pl_window = g_object_get_data (G_OBJECT (widget), "pl_window");

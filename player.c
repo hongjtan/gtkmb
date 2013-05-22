@@ -19,6 +19,8 @@
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include <string.h>
+#include <glib/gprintf.h>
+#include <gst/video/video.h>
 #include "player.h"
 #include "playlist.h"
 #include "variables.h"
