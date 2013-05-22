@@ -30,8 +30,6 @@ void play_button_clicked (GtkWidget *widget, gpointer data);
 void pause_button_clicked (GtkWidget *widget, gpointer data);
 void stop_button_clicked (GtkWidget *widget, gpointer data);
 void next_button_clicked (GtkWidget *widget, gpointer data);
-void add_button_clicked (GtkWidget *widget, gpointer data);
-void remove_button_clicked (GtkWidget *widget, gpointer data);
 void open_pl_button_clicked (GtkWidget *widget, gpointer data);
 void help_button_clicked (GtkWidget *widget, gpointer data);
 void loop_button_clicked (GtkWidget *widget, gpointer data);

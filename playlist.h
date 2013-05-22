@@ -56,6 +56,8 @@ typedef struct
 } tag_info;
 
 void new_pl_button_clicked (GtkWidget *widget, gpointer data);
+void add_button_clicked (GtkWidget *widget, gpointer data);
+void remove_button_clicked (GtkWidget *widget, gpointer data);
 #ifdef unix
 TotemPlParserResult parse_pl (gchar *uri, GtkListStore *pl_entries);
 void parsed_entry (TotemPlParser *parser,

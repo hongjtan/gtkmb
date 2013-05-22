@@ -40,6 +40,108 @@ void new_pl_button_clicked (GtkWidget *widget, gpointer data)
 	gtk_list_store_clear (pl_entries);
 }
 
+// Callback function when the open/add button is clicked.
+void add_button_clicked (GtkWidget *widget, gpointer data)
+{
+	GtkWidget *dialog, *window;
+
+	window = g_object_get_data (G_OBJECT (widget), "window");
+
+	if (gnome_vfs_init () != TRUE)
+		error_dialog (window, "Could not initialize GnomeVFS!");
+
+	dialog = gtk_file_chooser_dialog_new ("Open File",
+					      GTK_WINDOW (window),
+					      GTK_FILE_CHOOSER_ACTION_OPEN,
+					      GTK_STOCK_CANCEL,
+					      GTK_RESPONSE_CANCEL,
+					      GTK_STOCK_OPEN,
+					      GTK_RESPONSE_ACCEPT,
+					      NULL);
+	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT)
+	{
+		tag_info track_info;
+		GtkListStore *pl_entries;
+		gchar *uri, *filename;
+
+		pl_entries = g_object_get_data (G_OBJECT (widget),
+						"pl_entries");
+
+		// Get the URI of the file.
+		uri = gtk_file_chooser_get_uri (GTK_FILE_CHOOSER (dialog));
+
+		// Get the file path.
+		filename = gtk_file_chooser_get_filename
+			(GTK_FILE_CHOOSER (dialog));
+
+		#ifdef WIN32
+		filename = g_locale_from_utf8 (filename, -1, NULL, NULL, NULL);
+		#endif
+
+		#ifdef unix
+		// Parse playlist if a playlist file is added.
+		if (parse_pl (uri, pl_entries) ==
+					TOTEM_PL_PARSER_RESULT_SUCCESS)
+		{
+			g_free (uri);
+			g_free (filename);
+			gtk_widget_destroy (dialog);
+			return;
+		}
+		#endif
+
+		// Parse file of its tag info.
+		if (parse_tag (filename, &track_info))
+			add_data_at_end (pl_entries,
+					 track_info,
+					 uri,
+					 filename);
+		else
+		{
+			// Using this causes Windows to crash, so it will set
+			// it to the full path on Windows machines.
+			track_info.title = strrchr (filename, '/') + 1;
+
+			#ifdef WIN32
+			track_info.title = filename;
+			#endif
+
+			track_info.artist = "";
+			g_sprintf (track_info.length, "??:??");
+			add_data_at_end (pl_entries,
+					 track_info,
+					 uri,
+					 filename);
+		}
+		
+		g_free (uri);
+		g_free (filename);
+	}
+
+	gtk_widget_destroy (dialog);
+}
+
+// Callback for remove button to remove currently selected item from list.
+void remove_button_clicked (GtkWidget *widget, gpointer data)
+{
+	GtkWidget *playlist;
+	GtkListStore *pl_entries;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	GtkTreeSelection *selection;
+
+	playlist = g_object_get_data (G_OBJECT (widget), "playlist");
+	pl_entries = g_object_get_data (G_OBJECT (widget), "pl_entries");
+
+	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (playlist));
+	// Remove the selected element.
+	if (gtk_tree_selection_get_selected (selection, &model, &iter))
+	{
+		gtk_list_store_remove (pl_entries, &iter);
+	}
+
+}
+
 #ifdef unix
 // Parses a playlist, returns FALSE if not a playlist.
 TotemPlParserResult parse_pl (gchar *uri, GtkListStore *pl_entries)
