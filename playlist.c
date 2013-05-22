@@ -152,7 +152,7 @@ void load_pl_button_clicked (GtkWidget *widget, gpointer data)
 		// a valid playlist.
 		gtk_list_store_clear (pl_entries);
 
-		if (parse_pl (uri, pl_entries) !=
+		if (gnome_vfs_init () != TRUE || parse_pl (uri, pl_entries) !=
 					TOTEM_PL_PARSER_RESULT_SUCCESS)
 			error_dialog (pl_window, "Not a valid playlist.");
 
@@ -225,64 +225,79 @@ void save_pl_button_clicked (GtkWidget *widget, gpointer data)
 			type = TOTEM_PL_PARSER_PLS;
 
 		// Use this code for Totem Playlist Parser 2.28 and down.
-		if (gnome_vfs_init () != TRUE || totem_pl_parser_write (save_playlist, model, save_parser,
-				       	   filename, type, NULL, NULL) != TRUE)
-			error_dialog (pl_window,
-				      "Error occurred while saving playlist.");
-		// End code for 2.28.
-
-		// Use this code for Totem Playlist Parser 2.30+
-		/*TotemPlPlaylist *list_to_save;
-		TotemPlPlaylistIter pl_iter;
-		GFile *file;
-		gchar *uri, *title;
-
-		list_to_save = totem_pl_playlist_new ();
-		file = g_file_new_for_path (filename);
-
-		if (gtk_tree_model_get_iter_first (model, &playlist_iter))
+		if (TOTEM_PL_PARSER_VERSION_MAJOR == 2 && TOTEM_PL_PARSER_VERSION_MINOR < 30)
 		{
-			// Get and set the first element of the playlist.
-			gtk_tree_model_get (model, &playlist_iter,
-					    COL_URI, &uri,
-					    COL_TRACK_NAME, &title,
-					    -1);
-
-			totem_pl_playlist_append (list_to_save, &pl_iter);
-			
-			totem_pl_playlist_set (list_to_save, &pl_iter,
-					       TOTEM_PL_PARSER_FIELD_URI, uri,
-					       TOTEM_PL_PARSER_FIELD_TITLE,
-					       title, NULL);
-
-			// Now get and set the rest of the playlist.
-			while (gtk_tree_model_iter_next
-						(model, &playlist_iter))
+			if (gnome_vfs_init () != TRUE || totem_pl_parser_write (save_playlist,
+										model,
+										save_parser,
+										filename,
+										type,
+										NULL,
+										NULL) != TRUE)
 			{
+				error_dialog (pl_window,
+				      "Error occurred while saving playlist.");
+			}
+		}
+		// End code for 2.28.
+		// Use this code for Totem Playlist Parser 2.30+
+		/*else if (TOTEM_PL_PARSER_VERSION_MAJOR == 2 && TOTEM_PL_PARSER_VERSION_MINOR >= 30)
+		{
+			TotemPlPlaylist *list_to_save;
+			TotemPlPlaylistIter pl_iter;
+			GFile *file;
+			gchar *uri, *title;
+
+			list_to_save = totem_pl_playlist_new ();
+			file = g_file_new_for_path (filename);
+
+			if (gtk_tree_model_get_iter_first (model, &playlist_iter))
+			{
+				// Get and set the first element of the playlist.
 				gtk_tree_model_get (model, &playlist_iter,
 						    COL_URI, &uri,
 						    COL_TRACK_NAME, &title,
 						    -1);
 
-				totem_pl_playlist_append (list_to_save,
-							  &pl_iter);
+				totem_pl_playlist_append (list_to_save, &pl_iter);
 			
-				totem_pl_playlist_set (list_to_save,
-						       &pl_iter,
-						       TOTEM_PL_PARSER_FIELD_URI,
-						       uri,
+				totem_pl_playlist_set (list_to_save, &pl_iter,
+						       TOTEM_PL_PARSER_FIELD_URI, uri,
 						       TOTEM_PL_PARSER_FIELD_TITLE,
 						       title, NULL);
+
+				// Now get and set the rest of the playlist.
+				while (gtk_tree_model_iter_next
+							(model, &playlist_iter))
+				{
+					gtk_tree_model_get (model, &playlist_iter,
+							    COL_URI, &uri,
+							    COL_TRACK_NAME, &title,
+							    -1);
+
+					totem_pl_playlist_append (list_to_save,
+								  &pl_iter);
+			
+					totem_pl_playlist_set (list_to_save,
+							       &pl_iter,
+							       TOTEM_PL_PARSER_FIELD_URI,
+							       uri,
+							       TOTEM_PL_PARSER_FIELD_TITLE,
+							       title, NULL);
+				}
+
+				if (totem_pl_parser_save (save_playlist, list_to_save,
+							  file, NULL,
+							  type, NULL) != TRUE)
+					error_dialog (pl_window,
+					      "Error occurred while saving playlist.");
+
 			}
-
-			if (totem_pl_parser_save (save_playlist, list_to_save,
-						  file, NULL,
-						  type, NULL) != TRUE)
-				error_dialog (pl_window,
-				      "Error occurred while saving playlist.");
-
 		}*/
 		// End code for 2.30.
+		else {
+			error_dialog(pl_window, "Your version of Totem Playlist Parser is incompatible with GTKMB.");
+		}
 		
 
 	    g_free (filename);
