@@ -167,7 +167,6 @@ void save_pl_button_clicked (GtkWidget *widget, gpointer data)
 {
 	GtkWidget *dialog, *pl_window, *playlist;
 	GtkTreeModel *model;
-	//GtkTreeIter playlist_iter;
 	GtkFileFilter *format_playlist;
 
 	pl_window = g_object_get_data (G_OBJECT (widget), "pl_window");
@@ -225,80 +224,76 @@ void save_pl_button_clicked (GtkWidget *widget, gpointer data)
 			type = TOTEM_PL_PARSER_PLS;
 
 		// Use this code for Totem Playlist Parser 2.28 and down.
-		if (TOTEM_PL_PARSER_VERSION_MAJOR == 2 && TOTEM_PL_PARSER_VERSION_MINOR < 30)
+		#if TOTEM_PL_PARSER_VERSION_MAJOR == 2 && TOTEM_PL_PARSER_VERSION_MINOR < 30
+		if (gnome_vfs_init () != TRUE || totem_pl_parser_write (save_playlist,
+									model,
+									save_parser,
+									filename,
+									type,
+									NULL,
+									NULL) != TRUE)
 		{
-			if (gnome_vfs_init () != TRUE || totem_pl_parser_write (save_playlist,
-										model,
-										save_parser,
-										filename,
-										type,
-										NULL,
-										NULL) != TRUE)
-			{
-				error_dialog (pl_window,
-				      "Error occurred while saving playlist.");
-			}
+			error_dialog (pl_window,
+			      "Error occurred while saving playlist.");
 		}
 		// End code for 2.28.
 		// Use this code for Totem Playlist Parser 2.30+
-		/*else if (TOTEM_PL_PARSER_VERSION_MAJOR == 2 && TOTEM_PL_PARSER_VERSION_MINOR >= 30)
+		#elif TOTEM_PL_PARSER_VERSION_MAJOR == 2 && TOTEM_PL_PARSER_VERSION_MINOR >= 30
+		TotemPlPlaylist *list_to_save;
+		TotemPlPlaylistIter pl_iter;
+		GtkTreeIter playlist_iter;
+		GFile *file;
+		gchar *uri, *title;
+
+		list_to_save = totem_pl_playlist_new ();
+		file = g_file_new_for_path (filename);
+
+		if (gtk_tree_model_get_iter_first (model, &playlist_iter))
 		{
-			TotemPlPlaylist *list_to_save;
-			TotemPlPlaylistIter pl_iter;
-			GFile *file;
-			gchar *uri, *title;
+			// Get and set the first element of the playlist.
+			gtk_tree_model_get (model, &playlist_iter,
+					    COL_URI, &uri,
+					    COL_TRACK_NAME, &title,
+					    -1);
 
-			list_to_save = totem_pl_playlist_new ();
-			file = g_file_new_for_path (filename);
+			totem_pl_playlist_append (list_to_save, &pl_iter);
+		
+			totem_pl_playlist_set (list_to_save, &pl_iter,
+					       TOTEM_PL_PARSER_FIELD_URI, uri,
+					       TOTEM_PL_PARSER_FIELD_TITLE,
+					       title, NULL);
 
-			if (gtk_tree_model_get_iter_first (model, &playlist_iter))
+			// Now get and set the rest of the playlist.
+			while (gtk_tree_model_iter_next
+						(model, &playlist_iter))
 			{
-				// Get and set the first element of the playlist.
 				gtk_tree_model_get (model, &playlist_iter,
 						    COL_URI, &uri,
 						    COL_TRACK_NAME, &title,
 						    -1);
 
-				totem_pl_playlist_append (list_to_save, &pl_iter);
-			
-				totem_pl_playlist_set (list_to_save, &pl_iter,
-						       TOTEM_PL_PARSER_FIELD_URI, uri,
+				totem_pl_playlist_append (list_to_save,
+							  &pl_iter);
+		
+				totem_pl_playlist_set (list_to_save,
+						       &pl_iter,
+						       TOTEM_PL_PARSER_FIELD_URI,
+						       uri,
 						       TOTEM_PL_PARSER_FIELD_TITLE,
 						       title, NULL);
-
-				// Now get and set the rest of the playlist.
-				while (gtk_tree_model_iter_next
-							(model, &playlist_iter))
-				{
-					gtk_tree_model_get (model, &playlist_iter,
-							    COL_URI, &uri,
-							    COL_TRACK_NAME, &title,
-							    -1);
-
-					totem_pl_playlist_append (list_to_save,
-								  &pl_iter);
-			
-					totem_pl_playlist_set (list_to_save,
-							       &pl_iter,
-							       TOTEM_PL_PARSER_FIELD_URI,
-							       uri,
-							       TOTEM_PL_PARSER_FIELD_TITLE,
-							       title, NULL);
-				}
-
-				if (totem_pl_parser_save (save_playlist, list_to_save,
-							  file, NULL,
-							  type, NULL) != TRUE)
-					error_dialog (pl_window,
-					      "Error occurred while saving playlist.");
-
 			}
-		}*/
-		// End code for 2.30.
-		else {
-			error_dialog(pl_window, "Your version of Totem Playlist Parser is incompatible with GTKMB.");
+
+			if (totem_pl_parser_save (save_playlist, list_to_save,
+						  file, NULL,
+						  type, NULL) != TRUE)
+				error_dialog (pl_window,
+				      "Error occurred while saving playlist.");
+
 		}
-		
+		// End code for 2.30.
+		#else
+		error_dialog(pl_window, "Your version of Totem Playlist Parser is incompatible with GTKMB.");
+		#endif
 
 	    g_free (filename);
 	}
