@@ -95,10 +95,12 @@
 #include <gtk/gtk.h>
 #include <glib.h>
 #include <gst/gst.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 #include "playlist.h"
 #include "player.h"
 #include "video.h"
 #include "variables.h"
+#include "res.h"
 
 #ifdef GDK_WINDOWING_X11
 	#include <gdk/gdkx.h>
@@ -182,7 +184,8 @@ int main (int argc, char *argv[])
 
 	// Create the window and set its properties.
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	window_icon = gdk_pixbuf_new_from_file ("./img/icon.png", NULL);
+	//window_icon = gdk_pixbuf_new_from_file ("./img/icon.png", NULL);
+	window_icon = gdk_pixbuf_new_from_inline (-1, icon_img, FALSE, NULL);
 	gtk_widget_set_size_request (window, WIN_WIDTH, WIN_HEIGHT);
 	gtk_window_set_title (GTK_WINDOW (window), "GTK Media Box");
 	gtk_window_set_resizable (GTK_WINDOW (window), TRUE);
@@ -222,72 +225,88 @@ int main (int argc, char *argv[])
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (playlist));
 	gtk_tree_selection_set_mode (selection, GTK_SELECTION_BROWSE);
 
-	playing_icon = gdk_pixbuf_new_from_file
+	playing_icon = gdk_pixbuf_new_from_inline (-1, playing_img, FALSE, NULL);
+	paused_icon = gdk_pixbuf_new_from_inline (-1, paused_img, FALSE, NULL);
+	volume_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, volume_img, FALSE, NULL));
+
+	/*playing_icon = gdk_pixbuf_new_from_file
 				("./img/playing.png", NULL);
 	paused_icon = gdk_pixbuf_new_from_file
 				("./img/paused.png", NULL);
 	volume_icon = gtk_image_new_from_file
-				("./img/volume.png");
+				("./img/volume.png");*/
 
 	// Create the buttons on the player.
 	back = gtk_button_new ();
-	back_icon = gtk_image_new_from_file ("./img/back.png");
+	//back_icon = gtk_image_new_from_file ("./img/back.png");
+	back_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, back_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (back), back_icon);
 	gtk_widget_set_tooltip_text (back, "Previous Track");
 	
 	play = gtk_button_new ();
-	play_icon = gtk_image_new_from_file ("./img/play.png");
+	//play_icon = gtk_image_new_from_file ("./img/play.png");
+	play_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, play_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (play), play_icon);
 	gtk_widget_set_tooltip_text (play, "Play");
 
 	pause = gtk_button_new ();
-	pause_icon = gtk_image_new_from_file ("./img/pause.png");
+	//pause_icon = gtk_image_new_from_file ("./img/pause.png");
+	pause_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, pause_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (pause), pause_icon);
 	gtk_widget_set_tooltip_text (pause, "Pause");
 
 	stop = gtk_button_new ();
-	stop_icon = gtk_image_new_from_file ("./img/stop.png");
+	//stop_icon = gtk_image_new_from_file ("./img/stop.png");
+	stop_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, stop_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (stop), stop_icon);
 	gtk_widget_set_tooltip_text (stop, "Stop");
 
 	next = gtk_button_new ();
-	next_icon = gtk_image_new_from_file ("./img/next.png");
+	//next_icon = gtk_image_new_from_file ("./img/next.png");
+	next_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, next_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (next), next_icon);
 	gtk_widget_set_tooltip_text (next, "Next Track");
 
 	add = gtk_button_new ();
-	add_icon = gtk_image_new_from_file ("./img/add.png");
+	//add_icon = gtk_image_new_from_file ("./img/add.png");
+	add_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, add_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (add), add_icon);
 	gtk_widget_set_tooltip_text (add, "Add to Playlist...");
 
 	remove = gtk_button_new ();
-	remove_icon = gtk_image_new_from_file ("./img/remove.png");
+	//remove_icon = gtk_image_new_from_file ("./img/remove.png");
+	remove_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, remove_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (remove), remove_icon);
 	gtk_widget_set_tooltip_text (remove, "Remove from Playlist");
 
 	open_pl = gtk_toggle_button_new ();
-	open_pl_icon = gtk_image_new_from_file ("./img/open_pl.png");
+	//open_pl_icon = gtk_image_new_from_file ("./img/open_pl.png");
+	open_pl_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, open_pl_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (open_pl), open_pl_icon);
 	gtk_widget_set_tooltip_text (open_pl, "Open Playlist...");
 
 	new_pl = gtk_button_new ();
-	new_pl_icon = gtk_image_new_from_file ("./img/new_pl.png");
+	//new_pl_icon = gtk_image_new_from_file ("./img/new_pl.png");
+	new_pl_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, new_pl_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (new_pl), new_pl_icon);
 	gtk_widget_set_tooltip_text (new_pl, "New Playlist");
 
 	help = gtk_button_new ();
-	help_icon = gtk_image_new_from_file ("./img/help.png");
+	//help_icon = gtk_image_new_from_file ("./img/help.png");
+	help_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, help_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (help), help_icon);
 	gtk_widget_set_tooltip_text (new_pl, "About");
 
 	#ifdef unix
 	load_pl = gtk_button_new ();
-	load_pl_icon = gtk_image_new_from_file ("./img/load_pl.png");
+	//load_pl_icon = gtk_image_new_from_file ("./img/load_pl.png");
+	load_pl_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, load_pl_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (load_pl), load_pl_icon);
 	gtk_widget_set_tooltip_text (load_pl, "Load Playlist...");
 
 	save_pl = gtk_button_new ();
-	save_pl_icon = gtk_image_new_from_file ("./img/save_pl.png");
+	//save_pl_icon = gtk_image_new_from_file ("./img/save_pl.png");
+	save_pl_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, save_pl_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (save_pl), save_pl_icon);
 	gtk_widget_set_tooltip_text (save_pl, "Save Playlist...");
 	#endif
@@ -295,12 +314,14 @@ int main (int argc, char *argv[])
 	separate = gtk_vseparator_new ();
 
 	loop = gtk_toggle_button_new ();
-	loop_icon = gtk_image_new_from_file ("./img/loop.png");
+	//loop_icon = gtk_image_new_from_file ("./img/loop.png");
+	loop_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, loop_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (loop), loop_icon);
 	gtk_widget_set_tooltip_text (loop, "Toggle Loop");
 
 	shuffle = gtk_toggle_button_new ();
-	shuffle_icon = gtk_image_new_from_file ("./img/shuffle.png");
+	//shuffle_icon = gtk_image_new_from_file ("./img/shuffle.png");
+	shuffle_icon = gtk_image_new_from_pixbuf(gdk_pixbuf_new_from_inline (-1, shuffle_img, FALSE, NULL));
 	gtk_button_set_image (GTK_BUTTON (shuffle), shuffle_icon);
 	gtk_widget_set_tooltip_text (shuffle, "Toggle Shuffle");
 
