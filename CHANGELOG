@@ -1,6 +1,11 @@
 -------------------------------------------------------------------------------
 CHANGELOG
 -------------------------------------------------------------------------------
+Version 0.0.5 - May 22, 2013
+* About button added.
+
+Version 0.0.4 - May 13, 2013
+* Split the code into multiple files. Changed some comments.
 
 Version 0.0.3 - May 13, 2010
 * Now uses libtotem 2.30 instead of 2.28. 2.28 may still be used with slight

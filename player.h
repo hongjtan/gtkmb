@@ -33,6 +33,7 @@ void next_button_clicked (GtkWidget *widget, gpointer data);
 void add_button_clicked (GtkWidget *widget, gpointer data);
 void remove_button_clicked (GtkWidget *widget, gpointer data);
 void open_pl_button_clicked (GtkWidget *widget, gpointer data);
+void help_button_clicked (GtkWidget *widget, gpointer data);
 void loop_button_clicked (GtkWidget *widget, gpointer data);
 void shuffle_button_clicked (GtkWidget *widget, gpointer data);
 gboolean pl_delete (GtkWidget *widget, gpointer data);

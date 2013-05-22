@@ -11,3 +11,4 @@ $(APP): $(OBJ)
 
 clean:
 	rm $(APP)
+	rm *~

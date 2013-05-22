@@ -545,6 +545,36 @@ void open_pl_button_clicked (GtkWidget *widget, gpointer data)
 		gtk_widget_hide_all (pl_window);
 }
 
+// Callback function when the about button is clicked.
+void help_button_clicked (GtkWidget *widget, gpointer data)
+{
+	GtkWidget *window;
+
+	window = g_object_get_data (G_OBJECT (widget), "window");
+
+	GtkWidget *dialog = gtk_about_dialog_new();
+	gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), "GTKMB");
+	gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog), "0.0.5");
+	gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog), "Copyright (C) 2010, 2013 Hong Jie Tan");
+	gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog), "http://www.hongjtan.com");
+	gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog),\
+    "GTKMB is free software: you can redistribute it and/or modify\n\
+it under the terms of the GNU General Public License as published by\n\
+the Free Software Foundation, either version 3 of the License, or\n\
+(at your option) any later version.\n\n\
+\
+GTKMB is distributed in the hope that it will be useful,\n\
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
+GNU General Public License for more details.\n\
+\
+You should have received a copy of the GNU General Public License\n\
+along with GTKMB.  If not, see <http://www.gnu.org/licenses/>.");
+
+	gtk_dialog_run(GTK_DIALOG (dialog));
+	gtk_widget_destroy(dialog);
+}
+
 void loop_button_clicked (GtkWidget *widget, gpointer data)
 {
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget)))

@@ -3,7 +3,7 @@
 * AUTHOR: Hong Tan                                                            *
 * DATE: April 5, 2010                                                         *
 * MODIFIED: May 20, 2010                                                      *
-* VERSION: 0.0.4                                                              *
+* VERSION: 0.0.5                                                              *
 *                                                                             *
 * This program is designed to play media files using an autoplugger method,   *
 * which chooses the best decoder given a stream. Has the functions of a	      *
@@ -120,7 +120,7 @@ int main (int argc, char *argv[])
 		  *vbox_pl,	// Vertical box for the playlist.
 		  *hbox_pl;	// Holds the buttons for the playlist.
 	GtkWidget *back, *play, *pause, *stop, *next, *add, *remove, *open_pl,
-		  *new_pl, *load_pl, *save_pl, *separate, *loop, *shuffle;
+		  *new_pl, *load_pl, *save_pl, *separate, *loop, *shuffle, *help;
 	GtkWidget *back_icon,	// Icons representing each of the buttons on
 		  *play_icon,	// player.
 		  *pause_icon,
@@ -133,7 +133,8 @@ int main (int argc, char *argv[])
 		  *load_pl_icon,
 		  *save_pl_icon,
 		  *loop_icon,
-		  *shuffle_icon;
+		  *shuffle_icon,
+		  *help_icon;
 	GtkWidget *scroll_pl;	// Scroll window for the playlist.
 	GtkWidget *playlist;	// Used for the playlist.
 	GtkWidget *volume_bar,	// Volume scale.
@@ -274,6 +275,11 @@ int main (int argc, char *argv[])
 	gtk_button_set_image (GTK_BUTTON (new_pl), new_pl_icon);
 	gtk_widget_set_tooltip_text (new_pl, "New Playlist");
 
+	help = gtk_button_new ();
+	help_icon = gtk_image_new_from_file ("./img/help.png");
+	gtk_button_set_image (GTK_BUTTON (help), help_icon);
+	gtk_widget_set_tooltip_text (new_pl, "About");
+
 	#ifdef unix
 	load_pl = gtk_button_new ();
 	load_pl_icon = gtk_image_new_from_file ("./img/load_pl.png");
@@ -345,6 +351,7 @@ int main (int argc, char *argv[])
 			    FALSE,
 			    FALSE,
 			    2);
+	gtk_box_pack_start (GTK_BOX (hbox_buttons), help, FALSE, FALSE, 2);
 
 	gtk_container_add (GTK_CONTAINER (pl_window), vbox_pl);
 	gtk_box_pack_start (GTK_BOX (vbox_pl), scroll_pl, TRUE, TRUE, 2);
@@ -445,6 +452,10 @@ int main (int argc, char *argv[])
 	g_object_set_data (G_OBJECT (remove), "pl_entries", pl_entries);
 	g_signal_connect (G_OBJECT (remove), "clicked",
 			  G_CALLBACK (remove_button_clicked), NULL);
+
+        g_object_set_data (G_OBJECT (help), "window", window);
+	g_signal_connect (G_OBJECT (help), "clicked",
+			  G_CALLBACK (help_button_clicked), NULL);
 
 	g_object_set_data (G_OBJECT (open_pl), "pl_window", pl_window);
 	g_signal_connect (G_OBJECT (open_pl), "toggled",

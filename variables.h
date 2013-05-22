@@ -29,7 +29,7 @@
 #define MIN_VALUE 0
 #define MAX_VALUE 100
 #define MAX_CHARS 256
-#define WIN_WIDTH 360
+#define WIN_WIDTH 394
 #define WIN_HEIGHT 110
 
 // Global variables.
