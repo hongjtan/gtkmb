@@ -1,0 +1,34 @@
+GTKMB
+=====
+Copyright (C) 2010, 2013 Hong Jie Tan
+
+What is GTKMB?
+
+GTKMB, short for GTK Media Box, is a media player written for a college project back in Spring 2010 using the GTK+ toolkit and the gstreamer framework, along with the Taglib, GnomeVFS, and the Totem Playlist Parser libraries running on Ubuntu 10. It has all of the functionality of a basic media player plus basic playlist functionality.
+
+How do I run the app?
+
+In order to run GTKMB, you will first need to install the following, either through apt-get or through the Synaptic Package Manager:
+   -   GTK+ Toolkit 2.18+, currently not compatible with GTK+ 3.0.0+
+   -   gstreamer Framework (gstreamer0.10, libgstreamer-plugins-base0.10-0-dev)
+   -   Taglib C Bindings (libtagc0-dev)
+   -   GnomeVFS 2.0 Libraries (libgnomevfs2-dev)
+   -   Totem Playlist Parser Libraries (libtotem-plparser-dev)
+   -   gcc (build-essential)
+
+Once you have all of those installed, just type make to compile the application and then ./gtkmb to run the program.
+
+License:
+
+This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
